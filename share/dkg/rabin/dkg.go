@@ -290,7 +290,6 @@ func (d *DistKeyGenerator) ProcessDeal(dd *Deal) (*Response, error) {
 		return nil, err
 	}
 
-	d.verifiers[dd.Index] = ver
 	resp, err := ver.ProcessEncryptedDeal(dd.Deal)
 	if err != nil {
 		return nil, err
@@ -298,8 +297,9 @@ func (d *DistKeyGenerator) ProcessDeal(dd *Deal) (*Response, error) {
 
 	// Set StatusApproval for the verifier that represents the participant
 	// that distibuted the Deal
-	d.verifiers[dd.Index].UnsafeSetResponseDKG(dd.Index, true)
+	ver.UnsafeSetResponseDKG(dd.Index, true)
 
+	d.verifiers[dd.Index] = ver
 	return &Response{
 		Index:    dd.Index,
 		Response: resp,
